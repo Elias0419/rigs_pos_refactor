@@ -1,0 +1,324 @@
+<MDRaisedButton>:
+    markup: True
+<MarkupLabel>:
+    markup: True
+<MarkupButton>:
+    markup: True
+<MDLabel>:
+    markup: True
+<InventoryRow>:
+
+    canvas.after:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
+        Line:
+            points: self.x, self.y, self.x + self.width, self.y
+            width: 1
+    barcode: root.barcode
+    name: root.name
+    price: root.price
+
+
+    MarkupLabel:
+        id: name
+        text: root.formatted_name
+        halign: 'left'
+
+        text_size: self.size
+
+    Label:
+        id: price
+        text: root.formatted_price
+        size_hint_x: 0.2
+    MDFlatButton:
+        text: "[u]Add to Order[/u]"
+        on_press: root.add_to_order()
+        size_hint_x: 0.2
+<InventoryView>:
+    orientation: 'vertical'
+
+    rv: rv
+    BoxLayout:
+        size_hint_y: None
+        height: '32dp'
+        spacing: 5
+        TextInput:
+            id: inventory_search_input
+            hint_text: 'Search'
+            on_text: root.filter_inventory(self.text)
+
+    RecycleView:
+        id: rv
+        viewclass: 'InventoryRow'
+        RecycleBoxLayout:
+            #spacing: 5
+            default_size: None, dp(48)
+            default_size_hint: 1, None
+            size_hint_y: None
+            height: len(rv.data) * dp(48)
+            #height: self.minimum_height
+            orientation: 'vertical'
+<LabelPrintingRow>:
+    canvas.after:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
+        Line:
+            points: self.x, self.y, self.x + self.width, self.y
+            width: 1
+    barcode: root.barcode
+    name: root.name
+    price: root.price
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: '48dp'
+        padding: 1,1,1,1
+
+      #  Label:
+       #     id: barcode
+        #    text: root.barcode
+        MDLabel:
+            id: name
+            text: root.name
+            size_hint_x: 0.7
+            halign: 'left'
+            padding: 50,1,1,1
+        Label:
+            id: price
+            text: root.price
+            size_hint_x: 0.2
+        Button:
+            text: "Add to Queue"
+            on_press: root.add_to_print_queue()
+            size_hint_x: 0.1
+
+<LabelPrintingView>:
+    orientation: 'vertical'
+    rv: label_rv
+    BoxLayout:
+        size_hint_y: None
+        height: '48dp'
+        orientation: 'horizontal'
+        spacing: 5
+        TextInput:
+            id: label_search_input
+            size_hint_x: 0.8
+            hint_text: 'Search'
+            on_text: root.filter_inventory(self.text, root.dual_pane_mode)
+        MDRaisedButton:
+            text: "Clear"
+            size_hint: (0.2,1)
+            on_press: root.clear_search()
+        MDRaisedButton:
+            text: "Show Print Queue"
+            size_hint: (0.2,1)
+            on_press: root.show_print_queue()
+
+    RecycleView:
+        id: label_rv
+        viewclass: 'LabelPrintingRow'
+        RecycleBoxLayout:
+            default_size: None, dp(56)
+            default_size_hint: 1, None
+            size_hint_y: None
+            height: len(label_rv.data) * dp(56)
+            #height: self.minimum_height
+            orientation: 'vertical'
+
+
+<InventoryManagementRow>:
+    canvas.after:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
+        Line:
+            points: self.x, self.y, self.x + self.width, self.y
+            width: 1
+    barcode: root.barcode
+    name: root.name
+    price: root.formatted_price
+
+    GridLayout:
+        orientation: 'lr-tb'
+
+        cols: 3
+
+        Label:
+            text_size: self.size
+            halign: "left"
+            size_hint_x: 0.8
+            id: name
+            text: root.name
+
+        Label:
+            halign: "left"
+            size_hint_x: 0.2
+            id: barcode
+            text: root.barcode
+
+        Label:
+            halign: "left"
+            size_hint_x: 0.2
+            id: price
+            text: root.price
+
+
+    Button:
+        text: "Details"
+        size_hint_x: 0.1
+        on_press: root.app.utilities.open_inventory_manager_row(root)
+
+<InventoryManagementView>:
+    orientation: 'vertical'
+    rv: rv
+    BoxLayout:
+        size_hint_y: None
+        height: '48dp'
+        orientation: 'horizontal'
+        spacing: 5
+        size_hint_y: 0.05
+        TextInput:
+            id: inv_search_input
+            size_hint_x: 0.8
+            hint_text: 'Search'
+            on_text: root.filter_inventory(self.text)
+        MDRaisedButton:
+            text: "Clear"
+            size_hint: (0.2,1)
+            #size_hint_x: 0.2
+            on_press: root.clear_search()
+
+        MDRaisedButton:
+            text: "Add Item"
+            size_hint: (0.2,1)
+            #size_hint_x: 0.2
+            on_press: root.open_inventory_manager()
+
+
+
+    RecycleView:
+        id: rv
+        viewclass: 'InventoryManagementRow'
+        RecycleBoxLayout:
+            default_size: None, dp(40)
+            default_size_hint: 1, None
+            size_hint_y: None
+            #height: self.minimum_height
+            height: len(rv.data) * dp(40)
+            orientation: 'vertical'
+
+
+<HistoryRow>:
+
+    canvas.after:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
+        Line:
+            points: self.x, self.y, self.x + self.width, self.y
+            width: 1
+
+    GridLayout:
+        orientation: 'lr-tb'
+        cols: 3
+
+        Label:
+            id: items
+            text: root.items
+            size_hint_x: 0.65
+            text_size: self.size
+            halign: "left"
+
+        Label:
+            id: total_with_tax
+            text: root.total_with_tax
+            size_hint_x: 0.1
+
+        Label:
+            id: timestamp
+            text: root.timestamp
+            size_hint_x: 0.15
+
+    Button:
+        size_hint_x: 0.1
+        text: "Details"
+        on_press: root.history_view.display_order_details(root.order_id)
+
+<HistoryView>:
+    orientation: 'vertical'
+    RecycleView:
+        id: history_rv
+        viewclass: 'HistoryRow'
+        default_size_hint: 1, 1
+        #size_hint_x: 1
+        RecycleBoxLayout:
+            default_size: None, 1
+
+            default_size_hint: 1, 1
+            size_hint_y: None
+            spacing: 5
+            padding: 5
+            height: len(history_rv.data) * dp(48) # row height
+            #height: self.minimum_height
+            orientation: 'vertical'
+
+<DistRow>:
+    canvas.after:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
+        Line:
+            points: self.x, self.y, self.x + self.width, self.y
+            width: 1
+
+    GridLayout:
+        orientation: 'lr-tb'
+        cols: 5
+
+
+        Label:
+            id: text
+            text: root.text
+            size_hint_x: 0.65
+            text_size: self.size
+            halign: "left"
+
+        Label:
+            id: secondary_text
+            text: root.secondary_text
+            size_hint_x: 0.1
+
+        Label:
+            id: item_name
+            text: root.item_name
+            size_hint_x: 0.15
+
+        Label:
+            id: price
+            text: root.price_str
+            size_hint_x: 0.1
+
+        Label:
+            id: notes
+            text: root.notes
+            size_hint_x: 0.15
+
+    Button:
+        size_hint_x: 0.1
+        text: "Details"
+        on_press: root.do_nothin()
+
+<DistView>:
+    orientation: 'vertical'
+    RecycleView:
+        id: dist_rv
+        viewclass: 'DistRow'
+        size_hint_x: 1
+        RecycleBoxLayout:
+            default_size: None, dp(32)
+            default_size_hint: 1, None
+            size_hint_y: None
+            height: len(dist_rv.data) * dp(32)
+            #height: self.minimum_height
+            orientation: 'vertical'
+
+
+

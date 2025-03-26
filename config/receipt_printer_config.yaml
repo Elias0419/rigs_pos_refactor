@@ -1,0 +1,8 @@
+printer:
+    type: "Usb"
+    model: "TM-T20III"
+    connection: "usb"
+    idVendor: 0x04b8
+    idProduct: 0x0e28
+    media.width:
+        pixel: 612
