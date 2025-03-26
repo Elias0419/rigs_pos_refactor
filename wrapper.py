@@ -3,6 +3,8 @@ import time
 import sys
 import json
 import logging
+from pathlib import Path
+
 
 logger = logging.getLogger('wrapper')
 wrapper_logging_configured = False
@@ -42,7 +44,7 @@ class Wrapper:
         \n""")
 
         self.DEFAULT_CONFIG = {
-            "script_path": "/home/rigs/rigs_pos/main.py",
+            "script_path": str(Path(__file__).resolve().parent / "src/rigs_pos/main.py"),
             "recipient": "info@example.com",
         }
         self.config = self.load_config()
@@ -51,17 +53,17 @@ class Wrapper:
 
     def load_config(self):
         try:
-            with open("/home/rigs/rigs_pos/wrapper_config.json", "r") as f:
+            with open(str(Path(__file__).resolve().parent / "wrapper_config.json"), "r") as f:
                 config = json.load(f)
         except Exception:
-            logger.warning("Could not load /home/rigs/rigs_pos/wrapper_config.json; using defaults.")
+            logger.warning("Could not load wrapper_config.json using defaults.")
             config = self.DEFAULT_CONFIG
         return config
 
     def run_app(self):
         while True:
             process = subprocess.Popen([
-                "/home/rigs/0/bin/python3",
+                "python3",
                 self.config["script_path"]
             ])
             ret_code = process.wait()
